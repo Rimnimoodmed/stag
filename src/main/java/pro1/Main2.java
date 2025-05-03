@@ -1,6 +1,10 @@
 package pro1;
 
+import java.util.Comparator;
+
 import com.google.gson.Gson;
+
+import pro1.apiDataModel.Action;
 import pro1.apiDataModel.ActionsList;
 
 public class Main2 {
@@ -8,11 +12,14 @@ public class Main2 {
         System.out.println(maxPersonsCount("KIKM",2024));
     }
 
-    public static long maxPersonsCount(String department, int year)
+     public static long maxPersonsCount(String department, int year)
     {
         String json = Api.getActionsByDepartment(department,year);
         ActionsList actions= new Gson().fromJson(json, ActionsList.class);
 
-        return -1; // TODO 2.1: Vrať nejvyšší dosažený počet přihlášených studentů na jedné akci
+        Action result = actions.items.stream()
+        .max(Comparator.comparing(a -> a.personsCount))
+        .get();
+        return result.personsCount;
     }
 }
